@@ -4,10 +4,14 @@
 const Model = use("Model");
 
 class Convite extends Model {
-  usuario() {
-    return this.belongsTo("App/Models/User");
+  static boot() {
+    super.boot();
+    this.addHook("afterCreate", "ConviteHook.sendConviteEmail");
   }
-  empresa() {
+  usuarios() {
+    return this.belongsTo("App/Models/Usuario");
+  }
+  empresas() {
     return this.belongsTo("App/Models/Empresa");
   }
 }

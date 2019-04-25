@@ -1,4 +1,4 @@
-'use strict'
+"use strict";
 
 /** @typedef {import('@adonisjs/framework/src/Request')} Request */
 /** @typedef {import('@adonisjs/framework/src/Response')} Response */
@@ -17,7 +17,9 @@ class EmpresaController {
    * @param {Response} ctx.response
    * @param {View} ctx.view
    */
-  async index ({ request, response, view }) {
+  async index({ auth }) {
+    const empresa = await auth.user.empresas().fetch();
+    return empresa;
   }
 
   /**
@@ -29,8 +31,6 @@ class EmpresaController {
    * @param {Response} ctx.response
    * @param {View} ctx.view
    */
-  async create ({ request, response, view }) {
-  }
 
   /**
    * Create/save a new empresa.
@@ -40,7 +40,13 @@ class EmpresaController {
    * @param {Request} ctx.request
    * @param {Response} ctx.response
    */
-  async store ({ request, response }) {
+  async store({ request, auth }) {
+    const data = request.only("nome");
+    const empresa = await auth.user.empresas().create({
+      ...data,
+      usuario_id: auth.user.id
+    });
+    return empresa;
   }
 
   /**
@@ -52,7 +58,12 @@ class EmpresaController {
    * @param {Response} ctx.response
    * @param {View} ctx.view
    */
-  async show ({ params, request, response, view }) {
+  async show({ params, auth }) {
+    const empresa = await auth.user
+      .empresas()
+      .where("empresa_id", params.id)
+      .first();
+    return empresa;
   }
 
   /**
@@ -64,8 +75,6 @@ class EmpresaController {
    * @param {Response} ctx.response
    * @param {View} ctx.view
    */
-  async edit ({ params, request, response, view }) {
-  }
 
   /**
    * Update empresa details.
@@ -75,7 +84,16 @@ class EmpresaController {
    * @param {Request} ctx.request
    * @param {Response} ctx.response
    */
-  async update ({ params, request, response }) {
+  async update({ params, request, auth }) {
+    const data = request.only("nome");
+    const empresa = await auth.user
+      .empresas()
+      .where("empresa_id", params.id)
+      .first();
+
+    empresa.merge(data);
+    await empresa.save();
+    return empresa;
   }
 
   /**
@@ -86,8 +104,13 @@ class EmpresaController {
    * @param {Request} ctx.request
    * @param {Response} ctx.response
    */
-  async destroy ({ params, request, response }) {
+  async destroy({ params, auth }) {
+    const empresa = await auth.user
+      .empresas()
+      .where("empresa_id", params.id)
+      .first();
+    await empresa.delete();
   }
 }
 
-module.exports = EmpresaController
+module.exports = EmpresaController;

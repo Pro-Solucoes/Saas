@@ -1,11 +1,11 @@
-'use strict'
+"use strict";
 
-const Model = use('Model')
+const Model = use("Model");
 
 class UsuarioEmpresa extends Model {
-  usuario () {
-    return this.belongsTo('App/Models/User')
+  usuarios() {
+    return this.belongsTo("App/Models/Usuario");
   }
 }
 
-module.exports = UsuarioEmpresa
+module.exports = UsuarioEmpresa;
