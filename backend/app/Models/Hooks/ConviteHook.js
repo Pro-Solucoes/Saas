@@ -1,6 +1,7 @@
 "use strict";
 const Usuario = use("App/Models/Usuario");
-const Kue = user;
+const Kue = use("Kue");
+const Job = use("App/Jobs/ConviteEmail");
 const ConviteHook = (exports = module.exports = {});
 
 ConviteHook.sendConviteEmail = async convite => {
@@ -12,5 +13,7 @@ ConviteHook.sendConviteEmail = async convite => {
   } else {
     const usuario = await convite.usuario().fetch();
     const empresa = await convite.empresa().fetch();
+
+    Kue.dispatch(Job.key, { usuario, empresa, email }, { attempts: 3 });
   }
 };

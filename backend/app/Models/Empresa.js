@@ -22,7 +22,7 @@ class Empresa extends Model {
     );
   }
 
-  projects() {
+  projetos() {
     return this.hasMany("App/Models/Project");
   }
 }

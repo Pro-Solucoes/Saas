@@ -21,10 +21,12 @@ Route.get("/", () => {
 });
 
 Route.post("sessions", "SessionController.store");
+Route.post("usuarios", "UsuarioController.store");
 Route.group(() => {
   Route.resource("empresas", "EmpresaController").apiOnly();
 }).middleware("auth");
 
 Route.group(() => {
-  Route.post("convite", "ConviteController.store");
+  Route.post("convites", "ConviteController.store");
+  Route.resource("projetos", "ProjectController").apiOnly();
 }).middleware(["auth", "empresa"]);
